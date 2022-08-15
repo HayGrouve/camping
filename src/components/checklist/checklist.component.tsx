@@ -10,10 +10,7 @@ interface IChecklist {
 }
 
 const Checklist: React.FC<IChecklist> = ({ title, checklistData }) => {
-  const [campingData, setCampingData, removeCampingData] = useLocalStorage(
-    title,
-    checklistData
-  );
+  const [campingData, setCampingData] = useLocalStorage(title, checklistData);
 
   const handleClick = (id: string) => {
     setCampingData((prevData: IChecklistItem[]) => {
