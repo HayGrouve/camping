@@ -1,0 +1,11 @@
+.main {
+  width: 25rem;
+  margin: auto;
+}
+
+.main h2 {
+  color: #8bc6fc;
+}
+.wrapper {
+  padding: 0 1rem;
+}
