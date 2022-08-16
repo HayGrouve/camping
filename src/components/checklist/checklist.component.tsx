@@ -39,7 +39,7 @@ const Checklist: React.FC<IChecklist> = ({
   };
 
   useEffect(() => {
-    clearCheckmark();
+    if (isClearAll) clearCheckmark();
   }, [isClearAll, clearCheckmark]);
 
   return (
