@@ -20,7 +20,7 @@ function App() {
   return (
     <main>
       <div className={styles.header}>
-        <h1>Ceko's Camping Checklist</h1>
+        <h1 className={styles.heading}>Ceko's Camping Checklist</h1>
         <img src='./android-chrome-512x512.png' alt='tent' />
         <button onClick={() => setIsClearAll(!isClearAll)}>clear all</button>
       </div>

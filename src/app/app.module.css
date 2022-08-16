@@ -1,6 +1,6 @@
 .wrapper {
   max-width: 85%;
-  margin: 1rem auto;
+  margin: 2rem auto;
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -11,7 +11,11 @@
   gap: 2rem;
   text-align: center;
   max-width: 85%;
-  margin: 0 auto;
+  margin: 3rem auto;
+}
+
+.heading {
+  font-size: 3rem;
 }
 
 .header img {
