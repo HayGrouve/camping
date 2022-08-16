@@ -1,0 +1,19 @@
+.wrapper {
+  max-width: 85%;
+  margin: 1rem auto;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.header {
+  display: grid;
+  gap: 2rem;
+  text-align: center;
+  max-width: 85%;
+  margin: 0 auto;
+}
+
+.header img {
+  margin: 0 auto;
+}

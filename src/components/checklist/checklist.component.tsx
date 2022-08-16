@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { IChecklistItem } from '../../data/checklist';
 import { useLocalStorage } from '../../hooks/useStorage';
 import ChecklistItem from '../checklist-item/checklist-item.component';
@@ -7,10 +7,24 @@ import styles from './checklist.module.css';
 interface IChecklist {
   title: string;
   checklistData: IChecklistItem[];
+  isClearAll?: boolean;
 }
 
-const Checklist: React.FC<IChecklist> = ({ title, checklistData }) => {
+const Checklist: React.FC<IChecklist> = ({
+  title,
+  checklistData,
+  isClearAll,
+}) => {
   const [campingData, setCampingData] = useLocalStorage(title, checklistData);
+
+  const clearCheckmark = useCallback(() => {
+    setCampingData((prevData: IChecklistItem[]) => {
+      const newData = prevData.map((item) => {
+        return { ...item, isChecked: false };
+      });
+      return newData;
+    });
+  }, [setCampingData]);
 
   const handleClick = (id: string) => {
     setCampingData((prevData: IChecklistItem[]) => {
@@ -24,10 +38,19 @@ const Checklist: React.FC<IChecklist> = ({ title, checklistData }) => {
     });
   };
 
+  useEffect(() => {
+    clearCheckmark();
+  }, [isClearAll, clearCheckmark]);
+
   return (
-    <section className={styles.main}>
-      <h2>{title}</h2>
-      <div className={styles.wrapper}>
+    <section className={styles.wrapper}>
+      <div className={styles.header}>
+        <h2 className={styles.heading}>{title}</h2>
+        <button className={styles.clearBtn} onClick={() => clearCheckmark()}>
+          clear
+        </button>
+      </div>
+      <div className={styles.checklist}>
         {campingData.map(
           (item: { id: string; text: string; isChecked: boolean }) => {
             const { id, text, isChecked } = item;

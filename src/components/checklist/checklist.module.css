@@ -1,11 +1,13 @@
-.main {
-  width: 25rem;
-  margin: auto;
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
 }
 
-.main h2 {
-  color: #8bc6fc;
+.heading {
+  color: #78b159;
 }
-.wrapper {
-  padding: 0 1rem;
+
+.clearBtn {
+  align-self: center;
 }
