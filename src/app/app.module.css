@@ -1,17 +1,19 @@
 .wrapper {
-  max-width: 85%;
-  margin: 2rem auto;
+  margin: 3rem auto;
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+main {
+  max-width: min(1400px, 85%);
+  margin: 3rem auto;
 }
 
 .header {
   display: grid;
   gap: 2rem;
   text-align: center;
-  max-width: 85%;
-  margin: 3rem auto;
 }
 
 .heading {

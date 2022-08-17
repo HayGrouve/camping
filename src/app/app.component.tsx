@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Checklist from '../components/checklist/checklist.component';
+import Footer from '../components/common/footer/footer.component';
 import {
   cleanUp,
   clothesAndShoes,
@@ -77,6 +78,7 @@ function App() {
           title='PERSONAL BELONGINGS'
         />
       </div>
+      <Footer />
     </main>
   );
 }

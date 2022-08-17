@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
-import { IChecklistItem } from '../../data/checklist';
+import { IChecklistData } from '../../data/checklist';
 import { useLocalStorage } from '../../hooks/useStorage';
 import ChecklistItem from '../checklist-item/checklist-item.component';
 import styles from './checklist.module.css';
 
 interface IChecklist {
   title: string;
-  checklistData: IChecklistItem[];
+  checklistData: IChecklistData;
   isClearAll?: boolean;
 }
 
@@ -18,23 +18,23 @@ const Checklist: React.FC<IChecklist> = ({
   const [campingData, setCampingData] = useLocalStorage(title, checklistData);
 
   const clearCheckmark = useCallback(() => {
-    setCampingData((prevData: IChecklistItem[]) => {
-      const newData = prevData.map((item) => {
+    setCampingData((prevData: IChecklistData) => {
+      const data = prevData.data.map((item) => {
         return { ...item, isChecked: false };
       });
-      return newData;
+      return { ...prevData, data };
     });
   }, [setCampingData]);
 
   const handleClick = (id: string) => {
-    setCampingData((prevData: IChecklistItem[]) => {
-      const updatedData = prevData.map((item) => {
+    setCampingData((prevData: IChecklistData) => {
+      const data = prevData.data.map((item) => {
         if (item.id === id) {
           return { ...item, isChecked: !item.isChecked };
         }
         return item;
       });
-      return updatedData;
+      return { ...prevData, data };
     });
   };
 
@@ -51,7 +51,7 @@ const Checklist: React.FC<IChecklist> = ({
         </button>
       </div>
       <div className={styles.checklist}>
-        {campingData.map(
+        {campingData.data.map(
           (item: { id: string; text: string; isChecked: boolean }) => {
             const { id, text, isChecked } = item;
             return (

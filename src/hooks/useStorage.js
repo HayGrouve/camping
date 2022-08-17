@@ -3,8 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 export const useLocalStorage = (key, defaultValue) => {
   const [value, setValue] = useState(() => {
     const jsonValue = window.localStorage.getItem(key);
-    if (jsonValue != null) return JSON.parse(jsonValue);
-
+    if (jsonValue != null) {
+      const { expiry } = JSON.parse(jsonValue);
+      if (expiry > new Date().getTime()) return JSON.parse(jsonValue);
+    }
     if (typeof defaultValue === 'function') {
       return defaultValue();
     } else {
