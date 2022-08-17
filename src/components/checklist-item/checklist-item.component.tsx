@@ -13,11 +13,14 @@ const ChecklistItem: React.FC<IChecklistItem> = ({
   isChecked,
   handleClick,
 }) => {
+  const labelStyles = [styles.label];
+  if (isChecked) labelStyles.push(styles.checked);
   return (
     <div>
       <input
         checked={isChecked}
         type='checkbox'
+        className={styles.checkbox}
         name={text}
         id={id}
         onChange={(e) =>
@@ -25,7 +28,7 @@ const ChecklistItem: React.FC<IChecklistItem> = ({
           handleClick(e.target.id)
         }
       />
-      <label className={isChecked ? styles.checked : ''} htmlFor={id}>
+      <label className={labelStyles.join(' ')} htmlFor={id}>
         {text}
       </label>
     </div>
