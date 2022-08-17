@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './footer.module.css';
 
-interface IFooter {}
-
-const Footer: React.FC<IFooter> = ({}) => {
+const Footer: React.FC = () => {
   const [isScrollBtnVisible, setIsScrollBtnVisible] = useState(false);
 
   const toggleVisible = () => {
