@@ -2,37 +2,30 @@ import React, { useEffect, useState } from 'react';
 import styles from './footer.module.css';
 
 const Footer: React.FC = () => {
-  const [isScrollBtnVisible, setIsScrollBtnVisible] = useState(false);
-
-  const toggleVisible = () => {
-    const scrolled = document.documentElement.scrollTop;
-    scrolled > 700 ? setIsScrollBtnVisible(true) : setIsScrollBtnVisible(false);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', toggleVisible);
-    return () => {
-      window.removeEventListener('scroll', toggleVisible);
+    const onScroll = () => {
+      setIsVisible(window.scrollY > 700);
     };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className={styles.footer}>
-      <button
-        title='Go to the top'
-        onClick={scrollToTop}
-        style={{ display: isScrollBtnVisible ? 'inline' : 'none' }}
-        className={styles.scrollToTop}
-      >
-        Up
-      </button>
-    </div>
+    <button
+      type='button'
+      title='Go to the top'
+      aria-label='Scroll to top'
+      onClick={scrollToTop}
+      className={`${styles.fab} ${isVisible ? '' : styles.fabHidden}`}
+    >
+      ↑
+    </button>
   );
 };
 
