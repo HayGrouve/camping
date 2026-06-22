@@ -22,7 +22,7 @@ const svg = `
   <rect x="120" y="420" width="576" height="12" rx="6" fill="#6b9b5a"/>
   <path fill="#6b9b5a" d="M600 180 L480 360 h240 L600 180zm0 60 L552 330 h96 L600 240z"/>
   <text x="600" y="290" text-anchor="middle" fill="#f0ebe3" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="56" font-weight="700">Ceko's Camping Checklist</text>
-  <text x="600" y="350" text-anchor="middle" fill="#a89f94" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="32">Pack smarter for your next trip</text>
+  <text x="600" y="395" text-anchor="middle" fill="#a89f94" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="32">Pack smarter for your next trip</text>
 </svg>
 `;
 
