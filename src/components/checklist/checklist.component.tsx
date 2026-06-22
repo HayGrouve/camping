@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { CategoryIconId } from '../../data/categories';
 import { IChecklistData } from '../../data/checklist';
+import CategoryIcon from '../category-icon/category-icon.component';
 import ChecklistItem from '../checklist-item/checklist-item.component';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
 import styles from './checklist.module.css';
@@ -7,6 +9,7 @@ import styles from './checklist.module.css';
 interface ChecklistProps {
   anchorId: string;
   displayTitle: string;
+  iconId: CategoryIconId;
   data: IChecklistData;
   sectionProgress: { checked: number; total: number };
   isComplete: boolean;
@@ -17,6 +20,7 @@ interface ChecklistProps {
 const Checklist: React.FC<ChecklistProps> = ({
   anchorId,
   displayTitle,
+  iconId,
   data,
   sectionProgress,
   isComplete,
@@ -34,7 +38,10 @@ const Checklist: React.FC<ChecklistProps> = ({
       <section id={anchorId} className={wrapperClass}>
         <div className={styles.header}>
           <div className={styles.titleGroup}>
-            <h2 className={styles.heading}>{displayTitle}</h2>
+            <div className={styles.titleRow}>
+              <CategoryIcon iconId={iconId} />
+              <h2 className={styles.heading}>{displayTitle}</h2>
+            </div>
             <span className={styles.sectionProgress}>
               {sectionProgress.checked}/{sectionProgress.total}
             </span>

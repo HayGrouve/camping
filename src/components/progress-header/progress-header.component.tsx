@@ -12,7 +12,7 @@ interface ProgressHeaderProps {
   onClearAll: () => void;
 }
 
-const ProgressHeader = forwardRef<HTMLElement, ProgressHeaderProps>(
+const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
   (
     {
       totalProgress,

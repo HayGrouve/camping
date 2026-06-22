@@ -16,12 +16,23 @@
 
 .row:hover,
 .row:focus-visible {
-  background: rgba(120, 177, 89, 0.12);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
   outline: none;
 }
 
-.row:active {
-  background: rgba(120, 177, 89, 0.2);
+.rowFlash {
+  animation: checkFlash 0.2s ease-out;
+}
+
+@keyframes checkFlash {
+  0% { background: color-mix(in srgb, var(--color-accent-bright) 20%, transparent); }
+  100% { background: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowFlash {
+    animation: none;
+  }
 }
 
 .checkbox {

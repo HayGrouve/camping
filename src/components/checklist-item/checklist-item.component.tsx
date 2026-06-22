@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './checklist-item.module.css';
 
 interface ChecklistItemProps {
@@ -14,13 +14,28 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({
   isChecked,
   onToggle,
 }) => {
+  const [flash, setFlash] = useState(false);
+  const prevCheckedRef = useRef(isChecked);
+
+  useEffect(() => {
+    if (isChecked && !prevCheckedRef.current) {
+      setFlash(true);
+      const timer = window.setTimeout(() => setFlash(false), 200);
+      prevCheckedRef.current = isChecked;
+      return () => window.clearTimeout(timer);
+    }
+    prevCheckedRef.current = isChecked;
+  }, [isChecked]);
+
   const labelStyles = [styles.label];
   if (isChecked) labelStyles.push(styles.checked);
+
+  const rowClass = [styles.row, flash ? styles.rowFlash : ''].filter(Boolean).join(' ');
 
   return (
     <button
       type='button'
-      className={styles.row}
+      className={rowClass}
       onClick={() => onToggle(id)}
       aria-pressed={isChecked}
     >

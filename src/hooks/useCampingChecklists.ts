@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
-import { CATEGORIES } from '../data/categories';
+import { CATEGORIES, CategoryIconId } from '../data/categories';
 import { IChecklistData } from '../data/checklist';
 import {
   calcProgress,
@@ -36,6 +36,7 @@ export interface CampingChecklistView {
   storageKey: string;
   displayTitle: string;
   anchorId: string;
+  iconId: CategoryIconId;
   data: IChecklistData;
   sectionProgress: { checked: number; total: number };
   isComplete: boolean;
@@ -132,6 +133,7 @@ export const useCampingChecklists = (): UseCampingChecklistsResult => {
           const isComplete = sectionProgress.checked === sectionProgress.total;
           const data =
             showRemaining && !isComplete ? filterRemainingItems(entry.data) : entry.data;
+          const categoryDef = CATEGORIES.find((c) => c.storageKey === entry.storageKey);
 
           if (showRemaining && isComplete) return null;
 
@@ -139,6 +141,7 @@ export const useCampingChecklists = (): UseCampingChecklistsResult => {
             storageKey: entry.storageKey,
             displayTitle: entry.displayTitle,
             anchorId: entry.anchorId,
+            iconId: categoryDef!.iconId,
             data,
             sectionProgress,
             isComplete,
