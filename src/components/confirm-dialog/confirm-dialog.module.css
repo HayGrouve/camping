@@ -1,0 +1,47 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.dialog {
+  background: #323940;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 360px;
+  width: 100%;
+  border: 1px solid #3d4449;
+}
+
+.title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  color: #c8cdd0;
+  margin-bottom: 1.25rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  background: #3d4449;
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.confirmBtn {
+  background: #78b159;
+  color: white;
+  padding: 0.5rem 1rem;
+}
