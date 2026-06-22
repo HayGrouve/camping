@@ -39,6 +39,14 @@
 .sectionProgress {
   font-size: 0.85rem;
   color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.completeBadge {
+  color: var(--color-accent-bright);
+  font-size: 0.85rem;
 }
 
 .clearBtn {
@@ -48,6 +56,11 @@
   padding: 0.35rem 0.75rem;
   font-size: 0.85rem;
   flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
 }
 
 .checklist {

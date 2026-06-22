@@ -44,6 +44,11 @@ const Checklist: React.FC<ChecklistProps> = ({
             </div>
             <span className={styles.sectionProgress}>
               {sectionProgress.checked}/{sectionProgress.total}
+              {isComplete && (
+                <span className={styles.completeBadge} aria-label='Complete'>
+                  ✓
+                </span>
+              )}
             </span>
           </div>
           <button

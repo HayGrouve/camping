@@ -145,6 +145,7 @@ export const food: IChecklistData = {
       text: 'Spices, herbs and seasonings, including salt and pepper',
       isChecked: false,
     },
+    { id: uuidv4(), text: 'Eggs', isChecked: false },
     { id: uuidv4(), text: 'Cooking oil', isChecked: false },
     {
       id: uuidv4(),
@@ -176,7 +177,6 @@ export const food: IChecklistData = {
       isChecked: false,
     },
     { id: uuidv4(), text: 'Beer/other drinks', isChecked: false },
-    { id: uuidv4(), text: 'Water', isChecked: false },
   ],
   expiry: new Date().getTime() + 864000000,
 };
@@ -284,7 +284,7 @@ export const firstAid: IChecklistData = {
     { id: uuidv4(), text: 'Tweezers', isChecked: false },
     {
       id: uuidv4(),
-      text: 'Antihistamines(антиалергични лекарства)',
+      text: 'Antihistamines',
       isChecked: false,
     },
   ],

@@ -20,7 +20,10 @@ const ICONS: Record<CategoryIconId, React.ReactNode> = {
     <path d='M12 2l3 3h5v2h-1l-2 12H7L5 7H4V5h5l3-3z' />
   ),
   food: (
-    <path d='M8 2v8c0 2.2 1.8 4 4 4s4-1.8 4-4V2h-2v8c0 1.1-.9 2-2 2s-2-.9-2-2V2H8zm-4 18h12v2H4v-2z' />
+    <>
+      <path d='M12 2c-3 4.5-6 7.5-6 11.5a6 6 0 0012 0C18 9.5 15 6.5 12 2z' />
+      <path d='M6 17l2-1 4 1 4-1 2 1v3H6v-3z' />
+    </>
   ),
   hygiene: (
     <path d='M12 2c-2 4-6 6-6 10a6 6 0 0012 0c0-4-4-6-6-10z' />

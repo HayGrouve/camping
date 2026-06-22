@@ -32,6 +32,24 @@ const persistCategory = (storageKey: string, data: IChecklistData): void => {
   }
 };
 
+const SHOW_REMAINING_KEY = 'camping-show-remaining';
+
+const loadShowRemaining = (): boolean => {
+  try {
+    return sessionStorage.getItem(SHOW_REMAINING_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
+const persistShowRemaining = (value: boolean): void => {
+  try {
+    sessionStorage.setItem(SHOW_REMAINING_KEY, String(value));
+  } catch {
+    // ignore
+  }
+};
+
 export interface CampingChecklistView {
   storageKey: string;
   displayTitle: string;
@@ -63,7 +81,15 @@ export const useCampingChecklists = (): UseCampingChecklistsResult => {
     return initial;
   });
 
-  const [showRemaining, setShowRemaining] = useState(false);
+  const [showRemaining, setShowRemainingState] = useState(loadShowRemaining);
+
+  const setShowRemaining: Dispatch<SetStateAction<boolean>> = useCallback((value) => {
+    setShowRemainingState((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      persistShowRemaining(next);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     Object.entries(categoryState).forEach(([storageKey, data]) => {

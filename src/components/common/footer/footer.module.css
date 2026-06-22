@@ -1,7 +1,7 @@
 .fab {
   position: fixed;
-  right: 1.25rem;
-  bottom: 1.25rem;
+  right: calc(1.25rem + env(safe-area-inset-right, 0px));
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -11,6 +11,12 @@
   font-weight: 700;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   z-index: 90;
+}
+
+.fab:hover {
+  background: var(--color-accent-bright);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
 }
 
 .fabHidden {

@@ -4,6 +4,7 @@
   z-index: 100;
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header {
@@ -86,6 +87,16 @@
   font-size: 0.85rem;
 }
 
+.toggleBtn:hover,
+.jumpBtn:hover {
+  background: var(--color-surface-raised);
+}
+
+.clearBtn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+
 .toggleBtnActive {
   border-color: var(--color-accent);
   color: var(--color-accent);
@@ -153,6 +164,10 @@
   padding: 0.2rem 0.55rem;
   font-size: 0.78rem;
   white-space: nowrap;
+}
+
+.chip:hover {
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

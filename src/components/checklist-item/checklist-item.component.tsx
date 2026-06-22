@@ -30,6 +30,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({
   const labelStyles = [styles.label];
   if (isChecked) labelStyles.push(styles.checked);
 
+  const checkboxStyles = [styles.checkbox];
+  if (isChecked) checkboxStyles.push(styles.checkboxChecked);
+
   const rowClass = [styles.row, flash ? styles.rowFlash : ''].filter(Boolean).join(' ');
 
   return (
@@ -39,14 +42,21 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({
       onClick={() => onToggle(id)}
       aria-pressed={isChecked}
     >
-      <input
-        readOnly
-        tabIndex={-1}
-        checked={isChecked}
-        type='checkbox'
-        className={styles.checkbox}
-        aria-hidden='true'
-      />
+      <span className={checkboxStyles.join(' ')} aria-hidden='true'>
+        {isChecked && (
+          <svg
+            className={styles.checkmark}
+            viewBox='0 0 12 12'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          >
+            <path d='M2 6l3 3 5-5' />
+          </svg>
+        )}
+      </span>
       <span className={labelStyles.join(' ')}>{text}</span>
     </button>
   );
