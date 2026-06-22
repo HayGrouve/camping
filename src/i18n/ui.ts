@@ -23,7 +23,7 @@ export type UiKey =
 
 const UI: Record<Locale, Record<UiKey, string>> = {
   bg: {
-    'app.title': 'Списък за къмпинг на Ceko',
+    'app.title': 'Списък за къмпинг на Цеко',
     'showRemaining': 'Покажи оставащите',
     'showAll': 'Покажи всички',
     'clearAll': 'Изчисти всичко',
