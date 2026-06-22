@@ -22,6 +22,37 @@
 .title {
   font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   letter-spacing: 0.02em;
+  min-width: 0;
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.langToggle {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.langBtn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+}
+
+.langBtnActive {
+  background: var(--color-accent);
+  color: #fff;
 }
 
 .fractionBadge {

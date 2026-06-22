@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { useLocale, useTranslation } from '../../i18n/locale-context';
 import { CategoryRemaining, ProgressSummary } from '../../utils/progressUtils';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
 import styles from './progress-header.module.css';
@@ -24,6 +25,8 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
     },
     ref
   ) => {
+    const { locale, setLocale } = useLocale();
+    const { t, tProgress } = useTranslation();
     const [showClearConfirm, setShowClearConfirm] = useState(false);
     const [jumpPanelOpen, setJumpPanelOpen] = useState(false);
     const [badgePulse, setBadgePulse] = useState(false);
@@ -45,20 +48,48 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
       setJumpPanelOpen(false);
     };
 
-    const progressLabel = `${totalProgress.checked} of ${totalProgress.total} items packed, ${totalProgress.percent} percent`;
+    const progressLabel = tProgress(
+      totalProgress.checked,
+      totalProgress.total,
+      totalProgress.percent
+    );
 
     return (
       <>
         <div className={styles.headerWrapper} ref={ref}>
           <header className={styles.header}>
             <div className={styles.titleRow}>
-              <h1 className={styles.title}>Ceko&apos;s Camping Checklist</h1>
-              <span
-                className={`${styles.fractionBadge} ${badgePulse ? styles.fractionBadgePulse : ''}`}
-                aria-label={isAllPacked ? 'All items packed' : progressLabel}
-              >
-                {isAllPacked ? '✓' : `${totalProgress.checked}/${totalProgress.total}`}
-              </span>
+              <h1 className={styles.title}>{t('app.title')}</h1>
+              <div className={styles.titleActions}>
+                <div
+                  className={styles.langToggle}
+                  role='group'
+                  aria-label={t('switchLanguage')}
+                >
+                  <button
+                    type='button'
+                    className={`${styles.langBtn} ${locale === 'bg' ? styles.langBtnActive : ''}`}
+                    aria-pressed={locale === 'bg'}
+                    onClick={() => setLocale('bg')}
+                  >
+                    БГ
+                  </button>
+                  <button
+                    type='button'
+                    className={`${styles.langBtn} ${locale === 'en' ? styles.langBtnActive : ''}`}
+                    aria-pressed={locale === 'en'}
+                    onClick={() => setLocale('en')}
+                  >
+                    EN
+                  </button>
+                </div>
+                <span
+                  className={`${styles.fractionBadge} ${badgePulse ? styles.fractionBadgePulse : ''}`}
+                  aria-label={isAllPacked ? t('allItemsPacked') : progressLabel}
+                >
+                  {isAllPacked ? '✓' : `${totalProgress.checked}/${totalProgress.total}`}
+                </span>
+              </div>
             </div>
 
             <div
@@ -82,14 +113,14 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
                 onClick={onToggleShowRemaining}
                 aria-pressed={showRemaining}
               >
-                {showRemaining ? 'Show all' : 'Show remaining'}
+                {showRemaining ? t('showAll') : t('showRemaining')}
               </button>
               <button
                 type='button'
                 className={styles.clearBtn}
                 onClick={() => setShowClearConfirm(true)}
               >
-                Clear all
+                {t('clearAll')}
               </button>
               {categoriesWithRemaining.length > 0 && (
                 <button
@@ -98,13 +129,13 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
                   onClick={() => setJumpPanelOpen((open) => !open)}
                   aria-expanded={jumpPanelOpen}
                 >
-                  Jump to…{' '}
+                  {t('jumpTo')}{' '}
                   <span className={`${styles.chevron} ${jumpPanelOpen ? styles.chevronOpen : ''}`}>
                     ▾
                   </span>
                 </button>
               )}
-              {isAllPacked && <span className={styles.allPacked}>All packed!</span>}
+              {isAllPacked && <span className={styles.allPacked}>{t('allPacked')}</span>}
             </div>
           </header>
 
@@ -112,7 +143,7 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
             className={`${styles.jumpPanel} ${jumpPanelOpen ? styles.jumpPanelOpen : ''}`}
             aria-hidden={!jumpPanelOpen}
           >
-            <div className={styles.chipsRow} aria-label='Jump to categories with remaining items'>
+            <div className={styles.chipsRow} aria-label={t('jumpCategoriesAria')}>
               {categoriesWithRemaining.map((category) => (
                 <button
                   key={category.storageKey}
@@ -130,9 +161,9 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
 
         {showClearConfirm && (
           <ConfirmDialog
-            title='Clear all checkmarks?'
-            message='This will uncheck every item in all categories. Your items will not be deleted.'
-            confirmLabel='Clear all'
+            title={t('clearAllConfirm.title')}
+            message={t('clearAllConfirm.message')}
+            confirmLabel={t('clearAll')}
             onConfirm={() => {
               onClearAll();
               setShowClearConfirm(false);

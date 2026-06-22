@@ -1,6 +1,11 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { CATEGORIES, CategoryIconId } from '../data/categories';
 import { IChecklistData } from '../data/checklist';
+import { getCategoryTitle } from '../i18n/categories';
+import { ITEM_TEXT } from '../i18n/items';
+import { useLocale } from '../i18n/locale-context';
+import { loadLocale, Locale } from '../i18n/locale';
+import { mergeCategoryWithLocale } from '../i18n/mergeCategoryWithLocale';
 import {
   calcProgress,
   calcSectionProgress,
@@ -11,7 +16,7 @@ import {
   ProgressSummary,
 } from '../utils/progressUtils';
 
-const loadCategory = (storageKey: string, defaultData: IChecklistData): IChecklistData => {
+const readStoredCategory = (storageKey: string): IChecklistData | null => {
   try {
     const jsonValue = window.localStorage.getItem(storageKey);
     if (jsonValue != null) {
@@ -19,9 +24,18 @@ const loadCategory = (storageKey: string, defaultData: IChecklistData): ICheckli
       if (parsed.expiry > Date.now()) return parsed;
     }
   } catch {
-    // fall through to default
+    // fall through
   }
-  return defaultData;
+  return null;
+};
+
+const loadAndMerge = (
+  storageKey: string,
+  defaultData: IChecklistData,
+  locale: Locale
+): IChecklistData => {
+  const stored = readStoredCategory(storageKey);
+  return mergeCategoryWithLocale(defaultData, stored, locale, ITEM_TEXT);
 };
 
 const persistCategory = (storageKey: string, data: IChecklistData): void => {
@@ -73,15 +87,33 @@ export interface UseCampingChecklistsResult {
 }
 
 export const useCampingChecklists = (): UseCampingChecklistsResult => {
+  const { locale } = useLocale();
+
   const [categoryState, setCategoryState] = useState<Record<string, IChecklistData>>(() => {
     const initial: Record<string, IChecklistData> = {};
+    const initialLocale = loadLocale();
     CATEGORIES.forEach(({ storageKey, defaultData }) => {
-      initial[storageKey] = loadCategory(storageKey, defaultData);
+      initial[storageKey] = loadAndMerge(storageKey, defaultData, initialLocale);
     });
     return initial;
   });
 
   const [showRemaining, setShowRemainingState] = useState(loadShowRemaining);
+
+  useEffect(() => {
+    setCategoryState((prev) => {
+      const next: Record<string, IChecklistData> = {};
+      CATEGORIES.forEach(({ storageKey, defaultData }) => {
+        next[storageKey] = mergeCategoryWithLocale(
+          defaultData,
+          prev[storageKey] ?? null,
+          locale,
+          ITEM_TEXT
+        );
+      });
+      return next;
+    });
+  }, [locale]);
 
   const setShowRemaining: Dispatch<SetStateAction<boolean>> = useCallback((value) => {
     setShowRemainingState((prev) => {
@@ -132,13 +164,13 @@ export const useCampingChecklists = (): UseCampingChecklistsResult => {
 
   const categoryEntries: CategoryEntry[] = useMemo(
     () =>
-      CATEGORIES.map(({ storageKey, displayTitle, anchorId }) => ({
+      CATEGORIES.map(({ storageKey, anchorId }) => ({
         storageKey,
-        displayTitle,
+        displayTitle: getCategoryTitle(locale, storageKey),
         anchorId,
         data: categoryState[storageKey],
       })),
-    [categoryState]
+    [categoryState, locale]
   );
 
   const totalProgress = useMemo(

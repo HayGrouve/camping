@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CategoryIconId } from '../../data/categories';
 import { IChecklistData } from '../../data/checklist';
+import { useTranslation } from '../../i18n/locale-context';
 import CategoryIcon from '../category-icon/category-icon.component';
 import ChecklistItem from '../checklist-item/checklist-item.component';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
@@ -27,6 +28,7 @@ const Checklist: React.FC<ChecklistProps> = ({
   onToggleItem,
   onClearSection,
 }) => {
+  const { t, tInterpolate } = useTranslation();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const wrapperClass = isComplete
@@ -45,7 +47,7 @@ const Checklist: React.FC<ChecklistProps> = ({
             <span className={styles.sectionProgress}>
               {sectionProgress.checked}/{sectionProgress.total}
               {isComplete && (
-                <span className={styles.completeBadge} aria-label='Complete'>
+                <span className={styles.completeBadge} aria-label={t('sectionComplete')}>
                   ✓
                 </span>
               )}
@@ -56,7 +58,7 @@ const Checklist: React.FC<ChecklistProps> = ({
             className={styles.clearBtn}
             onClick={() => setShowClearConfirm(true)}
           >
-            Clear
+            {t('clearSection')}
           </button>
         </div>
         <div className={styles.checklist}>
@@ -74,9 +76,9 @@ const Checklist: React.FC<ChecklistProps> = ({
 
       {showClearConfirm && (
         <ConfirmDialog
-          title={`Clear ${displayTitle}?`}
-          message='This will uncheck all items in this category.'
-          confirmLabel='Clear section'
+          title={tInterpolate('clearSectionConfirm.title', { category: displayTitle })}
+          message={t('clearSectionConfirm.message')}
+          confirmLabel={t('clearSectionConfirm.confirm')}
           onConfirm={() => {
             onClearSection();
             setShowClearConfirm(false);

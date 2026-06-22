@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from '../../i18n/locale-context';
 import styles from './confirm-dialog.module.css';
 
 interface ConfirmDialogProps {
@@ -13,11 +14,14 @@ interface ConfirmDialogProps {
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   title,
   message,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useTranslation();
+  const resolvedCancel = cancelLabel ?? t('cancel');
+  const resolvedConfirm = confirmLabel ?? t('confirm');
   const cancelRef = useRef<HTMLButtonElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
 
@@ -79,7 +83,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             className={styles.cancelBtn}
             onClick={onCancel}
           >
-            {cancelLabel}
+            {resolvedCancel}
           </button>
           <button
             ref={confirmRef}
@@ -87,7 +91,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             className={styles.confirmBtn}
             onClick={onConfirm}
           >
-            {confirmLabel}
+            {resolvedConfirm}
           </button>
         </div>
       </div>

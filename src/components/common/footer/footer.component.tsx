@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from '../../../i18n/locale-context';
 import styles from './footer.module.css';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -19,8 +21,8 @@ const Footer: React.FC = () => {
   return (
     <button
       type='button'
-      title='Go to the top'
-      aria-label='Scroll to top'
+      title={t('scrollToTop')}
+      aria-label={t('scrollToTop')}
       onClick={scrollToTop}
       className={`${styles.fab} ${isVisible ? '' : styles.fabHidden}`}
     >
