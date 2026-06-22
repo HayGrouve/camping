@@ -1,37 +1,39 @@
 import React from 'react';
 import styles from './checklist-item.module.css';
-interface IChecklistItem {
+
+interface ChecklistItemProps {
   id: string;
   text: string;
   isChecked: boolean;
-  handleClick: Function;
+  onToggle: (id: string) => void;
 }
 
-const ChecklistItem: React.FC<IChecklistItem> = ({
+const ChecklistItem: React.FC<ChecklistItemProps> = ({
   id,
   text,
   isChecked,
-  handleClick,
+  onToggle,
 }) => {
   const labelStyles = [styles.label];
   if (isChecked) labelStyles.push(styles.checked);
+
   return (
-    <div>
+    <button
+      type='button'
+      className={styles.row}
+      onClick={() => onToggle(id)}
+      aria-pressed={isChecked}
+    >
       <input
+        readOnly
+        tabIndex={-1}
         checked={isChecked}
         type='checkbox'
         className={styles.checkbox}
-        name={text}
-        id={id}
-        onChange={(e) =>
-          //@ts-ignore
-          handleClick(e.target.id)
-        }
+        aria-hidden='true'
       />
-      <label className={labelStyles.join(' ')} htmlFor={id}>
-        {text}
-      </label>
-    </div>
+      <span className={labelStyles.join(' ')}>{text}</span>
+    </button>
   );
 };
 

@@ -1,9 +1,42 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.row:hover,
+.row:focus-visible {
+  background: rgba(120, 177, 89, 0.12);
+  outline: none;
+}
+
+.row:active {
+  background: rgba(120, 177, 89, 0.2);
+}
+
+.checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.label {
+  flex: 1;
+  cursor: pointer;
+}
+
 .checked {
   text-decoration: line-through;
   opacity: 0.5;
-}
-
-.label:hover,
-.checkbox:hover {
-  cursor: pointer;
 }

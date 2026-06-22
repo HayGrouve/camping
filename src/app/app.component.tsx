@@ -1,83 +1,48 @@
-import { useState } from 'react';
 import Checklist from '../components/checklist/checklist.component';
 import Footer from '../components/common/footer/footer.component';
-import {
-  cleanUp,
-  clothesAndShoes,
-  firstAid,
-  food,
-  furniture,
-  hygieneAndToiletries,
-  indoors,
-  outdoors,
-  personal,
-  recreational,
-  safety,
-} from '../data/checklist';
+import ProgressHeader from '../components/progress-header/progress-header.component';
+import { useCampingChecklists } from '../hooks/useCampingChecklists';
 import styles from './app.module.css';
 
 function App() {
-  const [isClearAll, setIsClearAll] = useState(false);
+  const {
+    categories,
+    totalProgress,
+    categoriesWithRemaining,
+    showRemaining,
+    setShowRemaining,
+    toggleItem,
+    clearSection,
+    clearAll,
+    isAllPacked,
+  } = useCampingChecklists();
+
   return (
-    <main>
-      <div className={styles.header}>
-        <h1 className={styles.heading}>Ceko's Camping Checklist</h1>
-        <img src='./android-chrome-512x512.png' alt='tent' />
-        <button onClick={() => setIsClearAll(!isClearAll)}>clear all</button>
-      </div>
+    <main className={styles.main}>
+      <ProgressHeader
+        totalProgress={totalProgress}
+        categoriesWithRemaining={categoriesWithRemaining}
+        showRemaining={showRemaining}
+        isAllPacked={isAllPacked}
+        onToggleShowRemaining={() => setShowRemaining((prev) => !prev)}
+        onClearAll={clearAll}
+      />
+
       <div className={styles.wrapper}>
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={indoors}
-          title='INDOORS'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={outdoors}
-          title='OUTDOORS'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={furniture}
-          title='FURNITURE'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={clothesAndShoes}
-          title='CLOTHES AND SHOES'
-        />
-        <Checklist isClearAll={isClearAll} checklistData={food} title='FOOD' />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={hygieneAndToiletries}
-          title='HYGIENE AND TOILETRIES'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={recreational}
-          title='RECREATIONAL GEAR'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={cleanUp}
-          title='CLEAN-UP'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={safety}
-          title='SAFETY'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={firstAid}
-          title='FIRST-AID'
-        />
-        <Checklist
-          isClearAll={isClearAll}
-          checklistData={personal}
-          title='PERSONAL BELONGINGS'
-        />
+        {categories.map((category) => (
+          <Checklist
+            key={category.storageKey}
+            anchorId={category.anchorId}
+            displayTitle={category.displayTitle}
+            data={category.data}
+            sectionProgress={category.sectionProgress}
+            isComplete={category.isComplete}
+            onToggleItem={(itemId) => toggleItem(category.storageKey, itemId)}
+            onClearSection={() => clearSection(category.storageKey)}
+          />
+        ))}
       </div>
+
       <Footer />
     </main>
   );

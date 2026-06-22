@@ -1,25 +1,12 @@
-.wrapper {
-  margin: 3rem auto;
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-}
-
-main {
-  max-width: min(1400px, 85%);
-  margin: 3rem auto;
-}
-
-.header {
-  display: grid;
-  gap: 2rem;
-  text-align: center;
-}
-
-.heading {
-  font-size: 3rem;
-}
-
-.header img {
+.main {
+  max-width: min(1400px, 92%);
   margin: 0 auto;
+  padding-bottom: 5rem;
+}
+
+.wrapper {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  margin-top: 1.25rem;
 }

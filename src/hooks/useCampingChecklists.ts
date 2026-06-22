@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { CATEGORIES } from '../data/categories';
 import { IChecklistData } from '../data/checklist';
 import {
@@ -46,7 +46,7 @@ export interface UseCampingChecklistsResult {
   totalProgress: ProgressSummary;
   categoriesWithRemaining: CategoryRemaining[];
   showRemaining: boolean;
-  setShowRemaining: (value: boolean) => void;
+  setShowRemaining: Dispatch<SetStateAction<boolean>>;
   toggleItem: (storageKey: string, itemId: string) => void;
   clearSection: (storageKey: string) => void;
   clearAll: () => void;

@@ -1,72 +1,78 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IChecklistData } from '../../data/checklist';
-import { useLocalStorage } from '../../hooks/useStorage';
 import ChecklistItem from '../checklist-item/checklist-item.component';
+import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
 import styles from './checklist.module.css';
 
-interface IChecklist {
-  title: string;
-  checklistData: IChecklistData;
-  isClearAll?: boolean;
+interface ChecklistProps {
+  anchorId: string;
+  displayTitle: string;
+  data: IChecklistData;
+  sectionProgress: { checked: number; total: number };
+  isComplete: boolean;
+  onToggleItem: (itemId: string) => void;
+  onClearSection: () => void;
 }
 
-const Checklist: React.FC<IChecklist> = ({
-  title,
-  checklistData,
-  isClearAll,
+const Checklist: React.FC<ChecklistProps> = ({
+  anchorId,
+  displayTitle,
+  data,
+  sectionProgress,
+  isComplete,
+  onToggleItem,
+  onClearSection,
 }) => {
-  const [campingData, setCampingData] = useLocalStorage(title, checklistData);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  const clearCheckmark = useCallback(() => {
-    setCampingData((prevData: IChecklistData) => {
-      const data = prevData.data.map((item) => {
-        return { ...item, isChecked: false };
-      });
-      return { ...prevData, data };
-    });
-  }, [setCampingData]);
-
-  const handleClick = (id: string) => {
-    setCampingData((prevData: IChecklistData) => {
-      const data = prevData.data.map((item) => {
-        if (item.id === id) {
-          return { ...item, isChecked: !item.isChecked };
-        }
-        return item;
-      });
-      return { ...prevData, data };
-    });
-  };
-
-  useEffect(() => {
-    if (isClearAll) clearCheckmark();
-  }, [isClearAll, clearCheckmark]);
+  const wrapperClass = isComplete
+    ? `${styles.wrapper} ${styles.wrapperComplete}`
+    : styles.wrapper;
 
   return (
-    <section className={styles.wrapper}>
-      <div className={styles.header}>
-        <h2 className={styles.heading}>{title}</h2>
-        <button className={styles.clearBtn} onClick={() => clearCheckmark()}>
-          clear
-        </button>
-      </div>
-      <div className={styles.checklist}>
-        {campingData.data.map(
-          (item: { id: string; text: string; isChecked: boolean }) => {
-            const { id, text, isChecked } = item;
-            return (
-              <ChecklistItem
-                key={id}
-                id={id}
-                text={text}
-                isChecked={isChecked}
-                handleClick={handleClick}
-              />
-            );
-          }
-        )}
-      </div>
-    </section>
+    <>
+      <section id={anchorId} className={wrapperClass}>
+        <div className={styles.header}>
+          <div className={styles.titleGroup}>
+            <h2 className={styles.heading}>{displayTitle}</h2>
+            <span className={styles.sectionProgress}>
+              {sectionProgress.checked}/{sectionProgress.total}
+            </span>
+          </div>
+          <button
+            type='button'
+            className={styles.clearBtn}
+            onClick={() => setShowClearConfirm(true)}
+          >
+            Clear
+          </button>
+        </div>
+        <div className={styles.checklist}>
+          {data.data.map((item) => (
+            <ChecklistItem
+              key={item.id}
+              id={item.id}
+              text={item.text}
+              isChecked={item.isChecked}
+              onToggle={onToggleItem}
+            />
+          ))}
+        </div>
+      </section>
+
+      {showClearConfirm && (
+        <ConfirmDialog
+          title={`Clear ${displayTitle}?`}
+          message='This will uncheck all items in this category.'
+          confirmLabel='Clear section'
+          onConfirm={() => {
+            onClearSection();
+            setShowClearConfirm(false);
+          }}
+          onCancel={() => setShowClearConfirm(false)}
+        />
+      )}
+    </>
   );
 };
 
