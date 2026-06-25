@@ -1,4 +1,5 @@
 .wrapper {
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -11,12 +12,16 @@
   border-color: var(--color-accent);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
+.stickyBar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 50;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
   margin-bottom: 0.75rem;
+  padding-right: 4.75rem;
+  min-width: 0;
 }
 
 .titleGroup {
@@ -50,12 +55,15 @@
 }
 
 .clearBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 51;
   background: var(--color-surface-raised);
   border: 1px solid var(--color-danger-muted);
   color: var(--color-text-muted);
   padding: 0.35rem 0.75rem;
   font-size: 0.85rem;
-  flex-shrink: 0;
 }
 
 .clearBtn:hover {

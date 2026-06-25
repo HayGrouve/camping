@@ -38,7 +38,7 @@ const Checklist: React.FC<ChecklistProps> = ({
   return (
     <>
       <section id={anchorId} className={wrapperClass}>
-        <div className={styles.header}>
+        <div className={styles.stickyBar}>
           <div className={styles.titleGroup}>
             <div className={styles.titleRow}>
               <CategoryIcon iconId={iconId} />
@@ -53,14 +53,14 @@ const Checklist: React.FC<ChecklistProps> = ({
               )}
             </span>
           </div>
-          <button
-            type='button'
-            className={styles.clearBtn}
-            onClick={() => setShowClearConfirm(true)}
-          >
-            {t('clearSection')}
-          </button>
         </div>
+        <button
+          type='button'
+          className={styles.clearBtn}
+          onClick={() => setShowClearConfirm(true)}
+        >
+          {t('clearSection')}
+        </button>
         <div className={styles.checklist}>
           {data.data.map((item) => (
             <ChecklistItem
