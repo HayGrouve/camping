@@ -71,6 +71,8 @@ export const food = makeDefault([
   ITEM_IDS.food.snacks,
   ITEM_IDS.food.saltySnacks,
   ITEM_IDS.food.beer,
+  ITEM_IDS.food.foodBowlsWithLids,
+  ITEM_IDS.food.servingBowls,
 ]);
 
 export const hygieneAndToiletries = makeDefault([

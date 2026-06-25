@@ -39,27 +39,38 @@ const Checklist: React.FC<ChecklistProps> = ({
     <>
       <section id={anchorId} className={wrapperClass}>
         <div className={styles.stickyBar}>
-          <div className={styles.titleGroup}>
-            <div className={styles.titleRow}>
+          <div className={styles.stickyBarInner}>
+            <span className={styles.headerIcon}>
               <CategoryIcon iconId={iconId} />
-              <h2 className={styles.heading}>{displayTitle}</h2>
-            </div>
-            <span className={styles.sectionProgress}>
-              {sectionProgress.checked}/{sectionProgress.total}
-              {isComplete && (
-                <span className={styles.completeBadge} aria-label={t('sectionComplete')}>
-                  ✓
-                </span>
-              )}
             </span>
+            <div className={styles.titleBlock}>
+              <h2 className={styles.heading}>{displayTitle}</h2>
+              <span className={styles.sectionProgress}>
+                {sectionProgress.checked}/{sectionProgress.total}
+                {isComplete && (
+                  <span className={styles.completeBadge} aria-label={t('sectionComplete')}>
+                    ✓
+                  </span>
+                )}
+              </span>
+            </div>
           </div>
         </div>
         <button
           type='button'
           className={styles.clearBtn}
           onClick={() => setShowClearConfirm(true)}
+          aria-label={t('clearSection')}
+          title={t('clearSection')}
         >
-          {t('clearSection')}
+          <svg
+            className={styles.clearIcon}
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            aria-hidden='true'
+          >
+            <path d='M9 3h6l1 1h4v2H4V4h4l1-1zm1 5h2v10h-2V8zm4 0h2v10h-2V8zM7 8h2v10a2 2 0 002 2h4a2 2 0 002-2V8h2v10a4 4 0 01-4 4H9a4 4 0 01-4-4V8z' />
+          </svg>
         </button>
         <div className={styles.checklist}>
           {data.data.map((item) => (

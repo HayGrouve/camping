@@ -7,7 +7,7 @@ export const useHeaderHeight = (headerRef: RefObject<HTMLElement | null>): void 
 
     const updateHeight = () => {
       const height = element.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--header-height', `${Math.ceil(height)}px`);
+      document.documentElement.style.setProperty('--header-height', `${height}px`);
     };
 
     updateHeight();
