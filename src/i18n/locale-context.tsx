@@ -10,6 +10,7 @@ import { getCategoryTitle } from './categories';
 import { loadLocale, Locale, persistLocale } from './locale';
 import {
   formatProgressLabel,
+  formatRemainingLabel,
   getUiString,
   interpolate,
   UiKey,
@@ -21,6 +22,7 @@ interface LocaleContextValue {
   t: (key: UiKey) => string;
   tCategory: (storageKey: string) => string;
   tProgress: (checked: number, total: number, percent: number) => string;
+  tRemaining: (remaining: number) => string;
   tInterpolate: (key: UiKey, values: Record<string, string>) => string;
 }
 
@@ -46,6 +48,7 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       tCategory: (storageKey) => getCategoryTitle(locale, storageKey),
       tProgress: (checked, total, percent) =>
         formatProgressLabel(locale, checked, total, percent),
+      tRemaining: (remaining) => formatRemainingLabel(locale, remaining),
       tInterpolate: (key, values) => interpolate(getUiString(locale, key), values),
     }),
     [locale, setLocale]
