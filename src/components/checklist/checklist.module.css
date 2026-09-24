@@ -2,38 +2,49 @@
   position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 1rem;
-  scroll-margin-top: var(--header-height);
-  transition: border-color 0.3s ease;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  scroll-margin-top: calc(var(--header-height) + 0.75rem);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .wrapperComplete {
-  border-color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 3px color-mix(in srgb, var(--color-accent) 10%, transparent);
 }
 
 .stickyBar {
   position: sticky;
   top: var(--header-height);
   z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1rem 0.875rem;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 -8px 0 8px var(--color-surface);
-  margin-bottom: 0.75rem;
-  padding: 0.25rem 3.25rem 0.625rem 0;
-}
-
-.stickyBarInner {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  min-width: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .headerIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.625rem;
+  height: 2.625rem;
   flex-shrink: 0;
-  line-height: 0;
-  margin-top: 0.2rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tint) 16%, transparent);
+  color: var(--tint);
+}
+
+.headerIconSvg {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .titleBlock {
@@ -42,56 +53,102 @@
 }
 
 .heading {
-  color: var(--color-accent);
-  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
-  line-height: 1.35;
-  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   overflow-wrap: anywhere;
 }
 
-.sectionProgress {
+.meta {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.2rem;
-  font-size: 0.85rem;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.miniTrack {
+  flex: 1;
+  max-width: 9rem;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--color-surface-hover);
+  overflow: hidden;
+}
+
+.miniFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tint);
+  transition:
+    width 0.45s var(--ease-out),
+    background-color 0.3s ease;
+}
+
+.wrapperComplete .miniFill {
+  background: var(--color-accent);
+}
+
+.sectionProgress {
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .completeBadge {
-  color: var(--color-accent-bright);
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.5rem 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: badgeIn 0.35s var(--ease-out);
+}
+
+.completeIcon {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+@keyframes badgeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .clearBtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 51;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-danger-muted);
-  border-radius: 6px;
-  color: var(--color-text-muted);
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 12px;
+  color: var(--color-text-subtle);
+}
+
+.clearBtn:hover:not(:disabled) {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.clearBtn:disabled {
+  opacity: 0.35;
 }
 
 .clearIcon {
-  width: 1.125rem;
-  height: 1.125rem;
-}
-
-.clearBtn:hover {
-  background: var(--color-border);
-  color: var(--color-text);
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .checklist {
+  list-style: none;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 2px;
+  padding: 0.5rem;
 }

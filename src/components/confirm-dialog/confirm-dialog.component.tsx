@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from '../../i18n/locale-context';
+import { ResetIcon } from '../icons/icons';
 import styles from './confirm-dialog.module.css';
 
 interface ConfirmDialogProps {
@@ -72,6 +73,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       onClick={handleBackdropClick}
     >
       <div className={styles.dialog}>
+        <span className={styles.iconWrap} aria-hidden='true'>
+          <ResetIcon className={styles.icon} />
+        </span>
         <h2 id='confirm-title' className={styles.title}>
           {title}
         </h2>

@@ -50,9 +50,9 @@ const SHOW_REMAINING_KEY = 'camping-show-remaining';
 
 const loadShowRemaining = (): boolean => {
   try {
-    return sessionStorage.getItem(SHOW_REMAINING_KEY) === 'true';
+    return sessionStorage.getItem(SHOW_REMAINING_KEY) !== 'false';
   } catch {
-    return false;
+    return true;
   }
 };
 

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { CategoryIconId } from '../../data/categories';
 import { IChecklistData } from '../../data/checklist';
 import { useTranslation } from '../../i18n/locale-context';
-import CategoryIcon from '../category-icon/category-icon.component';
+import CategoryIcon, { CATEGORY_TINTS } from '../category-icon/category-icon.component';
 import ChecklistItem from '../checklist-item/checklist-item.component';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
+import { CheckIcon, ResetIcon } from '../icons/icons';
 import styles from './checklist.module.css';
 
 interface ChecklistProps {
@@ -35,54 +36,61 @@ const Checklist: React.FC<ChecklistProps> = ({
     ? `${styles.wrapper} ${styles.wrapperComplete}`
     : styles.wrapper;
 
+  const percent =
+    sectionProgress.total === 0 ? 0 : (sectionProgress.checked / sectionProgress.total) * 100;
+
   return (
     <>
-      <section id={anchorId} className={wrapperClass}>
+      <section
+        id={anchorId}
+        className={wrapperClass}
+        style={{ '--tint': CATEGORY_TINTS[iconId] } as React.CSSProperties}
+      >
         <div className={styles.stickyBar}>
-          <div className={styles.stickyBarInner}>
-            <span className={styles.headerIcon}>
-              <CategoryIcon iconId={iconId} />
-            </span>
-            <div className={styles.titleBlock}>
-              <h2 className={styles.heading}>{displayTitle}</h2>
-              <span className={styles.sectionProgress}>
-                {sectionProgress.checked}/{sectionProgress.total}
-                {isComplete && (
-                  <span className={styles.completeBadge} aria-label={t('sectionComplete')}>
-                    ✓
-                  </span>
-                )}
-              </span>
+          <span className={styles.headerIcon}>
+            <CategoryIcon iconId={iconId} className={styles.headerIconSvg} />
+          </span>
+          <div className={styles.titleBlock}>
+            <h2 className={styles.heading}>{displayTitle}</h2>
+            <div className={styles.meta}>
+              <div className={styles.miniTrack} aria-hidden='true'>
+                <div className={styles.miniFill} style={{ width: `${percent}%` }} />
+              </div>
+              {isComplete ? (
+                <span className={styles.completeBadge}>
+                  <CheckIcon className={styles.completeIcon} />
+                  {t('sectionComplete')}
+                </span>
+              ) : (
+                <span className={styles.sectionProgress}>
+                  {sectionProgress.checked}/{sectionProgress.total}
+                </span>
+              )}
             </div>
           </div>
-        </div>
-        <button
-          type='button'
-          className={styles.clearBtn}
-          onClick={() => setShowClearConfirm(true)}
-          aria-label={t('clearSection')}
-          title={t('clearSection')}
-        >
-          <svg
-            className={styles.clearIcon}
-            viewBox='0 0 24 24'
-            fill='currentColor'
-            aria-hidden='true'
+          <button
+            type='button'
+            className={styles.clearBtn}
+            onClick={() => setShowClearConfirm(true)}
+            disabled={sectionProgress.checked === 0}
+            aria-label={t('clearSection')}
+            title={t('clearSection')}
           >
-            <path d='M9 3h6l1 1h4v2H4V4h4l1-1zm1 5h2v10h-2V8zm4 0h2v10h-2V8zM7 8h2v10a2 2 0 002 2h4a2 2 0 002-2V8h2v10a4 4 0 01-4 4H9a4 4 0 01-4-4V8z' />
-          </svg>
-        </button>
-        <div className={styles.checklist}>
-          {data.data.map((item) => (
-            <ChecklistItem
-              key={item.id}
-              id={item.id}
-              text={item.text}
-              isChecked={item.isChecked}
-              onToggle={onToggleItem}
-            />
-          ))}
+            <ResetIcon className={styles.clearIcon} />
+          </button>
         </div>
+        <ul className={styles.checklist}>
+          {data.data.map((item) => (
+            <li key={item.id}>
+              <ChecklistItem
+                id={item.id}
+                text={item.text}
+                isChecked={item.isChecked}
+                onToggle={onToggleItem}
+              />
+            </li>
+          ))}
+        </ul>
       </section>
 
       {showClearConfirm && (
