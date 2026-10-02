@@ -65,6 +65,13 @@ function App() {
     categories.filter((category) => (assignment.get(category.storageKey) ?? 0) === columnIndex)
   );
 
+  // When the last section is packed, the list stays mounted so that section can finish its
+  // exit; the empty state fades in after it. Any other route to "nothing left" shows it at once.
+  const isEmpty = categories.length === 0;
+  const populatedLayoutRef = useRef<string | null>(null);
+  if (!isEmpty) populatedLayoutRef.current = layoutKey;
+  const emptiedInPlace = isEmpty && populatedLayoutRef.current === layoutKey;
+
   const handleClearAll = () => {
     clearAll();
     // In the "remaining" view every packed item comes back at once, so start a fresh layout
@@ -88,48 +95,49 @@ function App() {
 
         <main className={styles.main}>
           <div ref={gridRef}>
-            {categories.length === 0 ? (
-              <div className={styles.empty}>
+            <m.div
+              key={layoutKey}
+              className={styles.columns}
+              style={{ '--columns': columnCount } as CSSProperties}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
+              {columns.map((column, columnIndex) => (
+                <div key={columnIndex} className={styles.column}>
+                  <AnimatePresence initial={false}>
+                    {column.map((category) => (
+                      <Checklist
+                        key={category.storageKey}
+                        anchorId={category.anchorId}
+                        displayTitle={category.displayTitle}
+                        iconId={category.iconId}
+                        data={category.data}
+                        sectionProgress={category.sectionProgress}
+                        isComplete={category.isComplete}
+                        onToggleItem={(itemId) => toggleItem(category.storageKey, itemId)}
+                        onClearSection={() => clearSection(category.storageKey)}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </m.div>
+
+            {isEmpty && (
+              <div className={`${styles.empty} ${emptiedInPlace ? styles.emptyAfterExit : ''}`}>
                 <Backpack className={styles.emptyIcon} aria-hidden='true' />
                 <h2 className={styles.emptyTitle}>{t('emptyState.title')}</h2>
                 <p className={styles.emptyMessage}>{t('emptyState.message')}</p>
                 <button
                   type='button'
                   className={styles.emptyAction}
+                  data-empty-action
                   onClick={() => setShowRemaining(false)}
                 >
                   {t('emptyState.action')}
                 </button>
               </div>
-            ) : (
-              <m.div
-                key={layoutKey}
-                className={styles.columns}
-                style={{ '--columns': columnCount } as CSSProperties}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
-              >
-                {columns.map((column, columnIndex) => (
-                  <div key={columnIndex} className={styles.column}>
-                    <AnimatePresence initial={false}>
-                      {column.map((category) => (
-                        <Checklist
-                          key={category.storageKey}
-                          anchorId={category.anchorId}
-                          displayTitle={category.displayTitle}
-                          iconId={category.iconId}
-                          data={category.data}
-                          sectionProgress={category.sectionProgress}
-                          isComplete={category.isComplete}
-                          onToggleItem={(itemId) => toggleItem(category.storageKey, itemId)}
-                          onClearSection={() => clearSection(category.storageKey)}
-                        />
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </m.div>
             )}
           </div>
         </main>

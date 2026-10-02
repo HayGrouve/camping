@@ -40,7 +40,8 @@ const Checklist: React.FC<ChecklistProps> = ({
   const showComplete = isComplete || isLeaving;
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Keyboard focus would be lost with the section, so pass it on to a neighbouring one.
+  // Keyboard focus would be lost with the section, so pass it on to a neighbouring one,
+  // or to the empty state's action when this was the last section.
   useEffect(() => {
     if (!isLeaving) return;
     const section = sectionRef.current;
@@ -49,7 +50,10 @@ const Checklist: React.FC<ChecklistProps> = ({
     const sections = Array.from(document.querySelectorAll<HTMLElement>('main section'));
     const index = sections.indexOf(section);
     const neighbour = sections[index + 1] ?? sections[index - 1];
-    neighbour?.querySelector<HTMLButtonElement>('li button')?.focus();
+    const target =
+      neighbour?.querySelector<HTMLButtonElement>('li button') ??
+      document.querySelector<HTMLButtonElement>('[data-empty-action]');
+    target?.focus();
   }, [isLeaving]);
 
   let percent = 0;
