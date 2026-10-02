@@ -1,74 +1,80 @@
+/*
+  Design tokens.
+  Palette: cool slate neutrals plus a single ember accent sampled from the tent in the hero photo.
+  Shape: controls are full pills, containers use --radius-container, rows --radius-row.
+  Layers: section headers < toolbar < scroll-to-top < dialog (see the --z-* scale below).
+*/
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --color-bg: #0e1512;
-  --color-surface: #151f1b;
-  --color-surface-raised: #1b2722;
-  --color-surface-hover: #21302a;
-  --color-border: rgba(214, 235, 222, 0.08);
-  --color-border-strong: rgba(214, 235, 222, 0.16);
-  --color-text: #ecf3ee;
-  --color-text-muted: #93a69b;
-  --color-text-subtle: #62756b;
-  --color-accent: #5fd08a;
-  --color-accent-strong: #7fe0a3;
-  --color-accent-contrast: #06140c;
-  --color-accent-soft: rgba(95, 208, 138, 0.14);
-  --color-danger: #f0785c;
-  --color-danger-soft: rgba(240, 120, 92, 0.14);
-  --color-glass: rgba(14, 21, 18, 0.74);
-  --color-backdrop: rgba(4, 8, 6, 0.6);
+  --color-bg: #f3f5f7;
+  --color-surface: #fbfcfd;
+  --color-surface-hover: #e8ecf0;
+  --color-line: rgba(16, 21, 28, 0.1);
+  --color-line-strong: rgba(16, 21, 28, 0.2);
+  --color-control: #808a96;
+  --color-text: #10151c;
+  --color-text-muted: #505b68;
+  --color-text-subtle: #67727f;
+  --color-accent: #e66c37;
+  --color-accent-hover: #d95f2b;
+  --color-accent-ink: #1c0d05;
+  --color-accent-text: #b0430e;
+  --color-accent-soft: rgba(230, 108, 55, 0.14);
+  --color-glass: rgba(243, 245, 247, 0.82);
+  --color-backdrop: rgba(16, 21, 28, 0.42);
 
-  --hero-sky: linear-gradient(180deg, #08111d 0%, #10213a 38%, #1d3b48 72%, #2a4d48 100%);
-  --hero-far: #1f3638;
-  --hero-mid: #172a24;
-  --hero-trees: #101b16;
+  --shadow-pop: 0 24px 60px -20px rgba(22, 36, 58, 0.32), 0 2px 8px rgba(22, 36, 58, 0.06);
 
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.6);
-  --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, 0.7);
+  --radius-container: 20px;
+  --radius-row: 12px;
+  --radius-check: 7px;
+  --radius-pill: 999px;
 
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  --font-sans: 'Sofia Sans Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Sofia Sans Condensed Variable', 'Sofia Sans Variable', 'Arial Narrow', system-ui,
+    sans-serif;
 
-  --font-sans: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  --z-section: 10;
+  --z-toolbar: 20;
+  --z-fab: 30;
+  --z-dialog: 40;
 
-  --header-height: 64px;
+  --page-gutter: clamp(1rem, 3.2vw, 3rem);
+  --header-height: 60px;
   --transition-fast: 0.18s ease;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: light;
+    color-scheme: dark;
 
-    --color-bg: #f3f1ea;
-    --color-surface: #ffffff;
-    --color-surface-raised: #f7f5ef;
-    --color-surface-hover: #f0ede4;
-    --color-border: rgba(38, 52, 44, 0.09);
-    --color-border-strong: rgba(38, 52, 44, 0.18);
-    --color-text: #16211b;
-    --color-text-muted: #5b6b62;
-    --color-text-subtle: #97a39c;
-    --color-accent: #1f9d55;
-    --color-accent-strong: #17864a;
-    --color-accent-contrast: #ffffff;
-    --color-accent-soft: rgba(31, 157, 85, 0.12);
-    --color-danger: #d4532f;
-    --color-danger-soft: rgba(212, 83, 47, 0.1);
-    --color-glass: rgba(243, 241, 234, 0.8);
-    --color-backdrop: rgba(22, 33, 27, 0.4);
+    --color-bg: #0b0f15;
+    --color-surface: #141a23;
+    --color-surface-hover: #1b2330;
+    --color-line: rgba(226, 234, 245, 0.1);
+    --color-line-strong: rgba(226, 234, 245, 0.22);
+    --color-control: #647082;
+    --color-text: #edf1f6;
+    --color-text-muted: #9ba7b6;
+    --color-text-subtle: #7d8998;
+    --color-accent-hover: #f07d4a;
+    --color-accent-text: #f08a5a;
+    --color-accent-soft: rgba(230, 108, 55, 0.18);
+    --color-glass: rgba(11, 15, 21, 0.8);
+    --color-backdrop: rgba(3, 6, 10, 0.64);
 
-    --hero-sky: linear-gradient(180deg, #1c2c4f 0%, #3e5683 40%, #c98f78 80%, #efc9a4 100%);
-    --hero-far: #7d8a93;
-    --hero-mid: #52665c;
-    --hero-trees: #2f443a;
-
-    --shadow-card: 0 1px 2px rgba(22, 33, 27, 0.04), 0 12px 32px -18px rgba(22, 33, 27, 0.25);
-    --shadow-pop: 0 24px 60px -16px rgba(22, 33, 27, 0.35);
+    --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(226, 234, 245, 0.04);
   }
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -78,7 +84,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-bg);
   color: var(--color-text);
-  min-height: 100vh;
+  min-height: 100dvh;
   line-height: 1.5;
   font-size: 1rem;
   padding-left: env(safe-area-inset-left, 0px);
@@ -86,11 +92,8 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Box sizing rules */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+::selection {
+  background: var(--color-accent-soft);
 }
 
 /* Remove default margin */
@@ -174,8 +177,10 @@ select {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

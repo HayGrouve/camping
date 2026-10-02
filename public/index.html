@@ -9,14 +9,34 @@
       name="description"
       content="Phone-friendly camping packing checklist with progress tracking."
     />
-    <meta name="theme-color" content="#0e1512" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f3f1ea" media="(prefers-color-scheme: light)" />
-    <meta name="color-scheme" content="dark light" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="theme-color" content="#0b0f15" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Hero photo: keep in sync with src/components/hero/hero.component.tsx -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(min-width: 1024px)"
+      imagesrcset="
+        %PUBLIC_URL%/images/camp-dusk-portrait-720.avif   720w,
+        %PUBLIC_URL%/images/camp-dusk-portrait-1080.avif 1080w,
+        %PUBLIC_URL%/images/camp-dusk-portrait-1440.avif 1440w
+      "
+      imagesizes="max(38vw, 75vh)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(max-width: 1023.98px)"
+      imagesrcset="
+        %PUBLIC_URL%/images/camp-dusk-landscape-640.avif   640w,
+        %PUBLIC_URL%/images/camp-dusk-landscape-960.avif   960w,
+        %PUBLIC_URL%/images/camp-dusk-landscape-1440.avif 1440w,
+        %PUBLIC_URL%/images/camp-dusk-landscape-1920.avif 1920w
+      "
+      imagesizes="100vw"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

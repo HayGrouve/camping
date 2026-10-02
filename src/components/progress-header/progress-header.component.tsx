@@ -1,10 +1,12 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import { ArrowCounterClockwise, CaretDown, Check } from '@phosphor-icons/react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { CATEGORIES } from '../../data/categories';
 import { useTranslation } from '../../i18n/locale-context';
 import { CategoryRemaining, ProgressSummary } from '../../utils/progressUtils';
-import CategoryIcon, { CATEGORY_TINTS } from '../category-icon/category-icon.component';
+import CategoryIcon from '../category-icon/category-icon.component';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
-import { CheckIcon, ChevronDownIcon, ResetIcon } from '../icons/icons';
 import styles from './progress-header.module.css';
 
 interface ProgressHeaderProps {
@@ -34,6 +36,7 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
     const [badgePulse, setBadgePulse] = useState(false);
     const prevCheckedRef = useRef(totalProgress.checked);
     const jumpRef = useRef<HTMLDivElement>(null);
+    const jumpPanelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
       if (totalProgress.checked > prevCheckedRef.current) {
@@ -69,6 +72,20 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
       if (categoriesWithRemaining.length === 0) setJumpPanelOpen(false);
     }, [categoriesWithRemaining.length]);
 
+    // Before the toolbar has stuck to the top, the open panel can run past the bottom of the
+    // screen. Nudge the page up just enough to show all of it.
+    useEffect(() => {
+      if (!jumpPanelOpen) return;
+      const panel = jumpPanelRef.current;
+      const anchor = panel?.offsetParent;
+      if (!panel || !anchor) return;
+
+      // Offsets instead of the panel's own rect, which is still mid-animation here
+      const panelBottom = anchor.getBoundingClientRect().top + panel.offsetTop + panel.offsetHeight;
+      const overflow = panelBottom + 16 - window.innerHeight;
+      if (overflow > 0) window.scrollBy({ top: overflow, behavior: 'smooth' });
+    }, [jumpPanelOpen]);
+
     const scrollToCategory = (anchorId: string) => {
       const element = document.getElementById(anchorId);
       element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -96,7 +113,7 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
               aria-label={isAllPacked ? t('allItemsPacked') : progressLabel}
             >
               {isAllPacked ? (
-                <CheckIcon className={styles.badgeCheck} />
+                <Check className={styles.badgeCheck} weight='bold' aria-hidden='true' />
               ) : (
                 <>
                   <strong>{totalProgress.checked}</strong>
@@ -137,44 +154,49 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
                   aria-expanded={jumpPanelOpen}
                 >
                   {t('jumpTo')}
-                  <ChevronDownIcon
+                  <CaretDown
                     className={`${styles.chevron} ${jumpPanelOpen ? styles.chevronOpen : ''}`}
+                    weight='bold'
+                    aria-hidden='true'
                   />
                 </button>
 
-                {jumpPanelOpen && (
-                  <div className={styles.jumpPanel}>
-                    <ul className={styles.jumpList} aria-label={t('jumpCategoriesAria')}>
-                      {categoriesWithRemaining.map((category) => {
-                        const iconId = CATEGORIES.find(
-                          (definition) => definition.storageKey === category.storageKey
-                        )?.iconId;
-                        return (
-                          <li key={category.storageKey}>
-                            <button
-                              type='button'
-                              className={styles.jumpItem}
-                              onClick={() => scrollToCategory(category.anchorId)}
-                              style={
-                                iconId
-                                  ? ({ '--tint': CATEGORY_TINTS[iconId] } as React.CSSProperties)
-                                  : undefined
-                              }
-                            >
-                              {iconId && (
-                                <span className={styles.jumpIcon}>
-                                  <CategoryIcon iconId={iconId} className={styles.jumpIconSvg} />
-                                </span>
-                              )}
-                              <span className={styles.jumpName}>{category.displayTitle}</span>
-                              <span className={styles.jumpCount}>{category.remaining}</span>
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {jumpPanelOpen && (
+                    <m.div
+                      key='jump-panel'
+                      ref={jumpPanelRef}
+                      className={styles.jumpPanel}
+                      initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <ul className={styles.jumpList} aria-label={t('jumpCategoriesAria')}>
+                        {categoriesWithRemaining.map((category) => {
+                          const iconId = CATEGORIES.find(
+                            (definition) => definition.storageKey === category.storageKey
+                          )?.iconId;
+                          return (
+                            <li key={category.storageKey}>
+                              <button
+                                type='button'
+                                className={styles.jumpItem}
+                                onClick={() => scrollToCategory(category.anchorId)}
+                              >
+                                {iconId && (
+                                  <CategoryIcon iconId={iconId} className={styles.jumpIcon} />
+                                )}
+                                <span className={styles.jumpName}>{category.displayTitle}</span>
+                                <span className={styles.jumpCount}>{category.remaining}</span>
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </m.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 
@@ -186,7 +208,7 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
               title={t('clearAll')}
               aria-label={t('clearAll')}
             >
-              <ResetIcon className={styles.toolIcon} />
+              <ArrowCounterClockwise className={styles.toolIcon} weight='bold' aria-hidden='true' />
               <span className={styles.clearLabel}>{t('clearAll')}</span>
             </button>
           </div>
@@ -200,24 +222,27 @@ const ProgressHeader = forwardRef<HTMLDivElement, ProgressHeaderProps>(
             aria-label={progressLabel}
           >
             <div
-              className={`${styles.progressFill} ${isAllPacked ? styles.progressFillAllPacked : ''}`}
-              style={{ width: `${totalProgress.percent}%` }}
+              className={styles.progressFill}
+              style={{ transform: `translateX(${totalProgress.percent - 100}%)` }}
             />
           </div>
         </div>
 
-        {showClearConfirm && (
-          <ConfirmDialog
-            title={t('clearAllConfirm.title')}
-            message={t('clearAllConfirm.message')}
-            confirmLabel={t('clearAll')}
-            onConfirm={() => {
-              onClearAll();
-              setShowClearConfirm(false);
-            }}
-            onCancel={() => setShowClearConfirm(false)}
-          />
-        )}
+        <AnimatePresence>
+          {showClearConfirm && (
+            <ConfirmDialog
+              key='clear-all-confirm'
+              title={t('clearAllConfirm.title')}
+              message={t('clearAllConfirm.message')}
+              confirmLabel={t('clearAll')}
+              onConfirm={() => {
+                onClearAll();
+                setShowClearConfirm(false);
+              }}
+              onCancel={() => setShowClearConfirm(false)}
+            />
+          )}
+        </AnimatePresence>
       </>
     );
   }

@@ -44,3 +44,16 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Design assets
+
+- **Hero photos** live in `public/images` and are committed. `pnpm generate-hero-images` rebuilds them from the full-size originals (downloaded into `.cache/photos` on first run). When the widths change, update `src/components/hero/hero.component.tsx` and the preload tags in `public/index.html` too.
+- **Social preview** (`public/og-image.png`) is a static render of `scripts/og-image.html`. The comment at the top of that file explains how to refresh it.
+- **Fonts** are Sofia Sans and Sofia Sans Condensed, self-hosted through `@fontsource-variable`.
+
+### Photo credits
+
+Both photos are CC0 (public domain), originally published on Unsplash:
+
+- Tent at dusk: [Cristian Grecu](https://commons.wikimedia.org/wiki/File:Cristian_Grecu_2017-05-23_(Unsplash_xQYW7brEauY).jpg)
+- Tent above the clouds: [Christopher Jolly](https://commons.wikimedia.org/wiki/File:Camping_in_the_mountains_(Unsplash).jpg)

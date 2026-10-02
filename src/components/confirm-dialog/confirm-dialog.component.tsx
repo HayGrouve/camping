@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import * as m from 'motion/react-m';
 import { useTranslation } from '../../i18n/locale-context';
-import { ResetIcon } from '../icons/icons';
+import { EASE_OUT } from '../motion';
 import styles from './confirm-dialog.module.css';
 
 interface ConfirmDialogProps {
@@ -26,9 +28,16 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const cancelRef = useRef<HTMLButtonElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
 
+  // Focus the safe action on open and give focus back to the trigger on close
   useEffect(() => {
+    const previouslyFocused = document.activeElement;
     cancelRef.current?.focus();
+    return () => {
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+    };
+  }, []);
 
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onCancel();
@@ -64,22 +73,32 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     }
   };
 
-  return (
-    <div
+  return createPortal(
+    <m.div
       className={styles.backdrop}
       role='dialog'
       aria-modal='true'
       aria-labelledby='confirm-title'
+      aria-describedby='confirm-message'
       onClick={handleBackdropClick}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className={styles.dialog}>
-        <span className={styles.iconWrap} aria-hidden='true'>
-          <ResetIcon className={styles.icon} />
-        </span>
+      <m.div
+        className={styles.dialog}
+        initial={{ opacity: 0, y: 16, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+        transition={{ duration: 0.3, ease: EASE_OUT }}
+      >
         <h2 id='confirm-title' className={styles.title}>
           {title}
         </h2>
-        <p className={styles.message}>{message}</p>
+        <p id='confirm-message' className={styles.message}>
+          {message}
+        </p>
         <div className={styles.actions}>
           <button
             ref={cancelRef}
@@ -98,8 +117,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             {resolvedConfirm}
           </button>
         </div>
-      </div>
-    </div>
+      </m.div>
+    </m.div>,
+    document.body
   );
 };
 

@@ -1,24 +1,37 @@
+.sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 700px;
+  pointer-events: none;
+}
+
 .fab {
   position: fixed;
   right: calc(1.25rem + env(safe-area-inset-right, 0px));
   bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-fab);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  box-shadow:
-    0 10px 24px -8px color-mix(in srgb, var(--color-accent) 70%, transparent),
-    0 4px 12px rgba(0, 0, 0, 0.25);
-  z-index: 90;
+  border-radius: var(--radius-pill);
+  background: var(--color-text);
+  color: var(--color-bg);
+  box-shadow: var(--shadow-pop);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s var(--ease-out);
 }
 
 .fab:hover {
-  background: var(--color-accent-strong);
   transform: translateY(-2px);
+}
+
+.fab:active {
+  transform: scale(0.94);
 }
 
 .fabHidden {
