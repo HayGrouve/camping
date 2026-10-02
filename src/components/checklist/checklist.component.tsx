@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowCounterClockwise, Check } from '@phosphor-icons/react';
+import { AnimatePresence, useIsPresent } from 'motion/react';
+import * as m from 'motion/react-m';
 import { CategoryIconId } from '../../data/categories';
 import { IChecklistData } from '../../data/checklist';
 import { useTranslation } from '../../i18n/locale-context';
-import CategoryIcon, { CATEGORY_TINTS } from '../category-icon/category-icon.component';
+import CategoryIcon from '../category-icon/category-icon.component';
 import ChecklistItem from '../checklist-item/checklist-item.component';
 import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
-import { CheckIcon, ResetIcon } from '../icons/icons';
+import { useCollapseMotion } from '../motion';
 import styles from './checklist.module.css';
 
 interface ChecklistProps {
@@ -31,80 +34,114 @@ const Checklist: React.FC<ChecklistProps> = ({
 }) => {
   const { t, tInterpolate } = useTranslation();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const collapse = useCollapseMotion();
+  // The section only leaves once its last item is packed, so it shows as complete while it goes.
+  const isLeaving = !useIsPresent();
+  const showComplete = isComplete || isLeaving;
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const wrapperClass = isComplete
-    ? `${styles.wrapper} ${styles.wrapperComplete}`
-    : styles.wrapper;
+  // Keyboard focus would be lost with the section, so pass it on to a neighbouring one,
+  // or to the empty state's action when this was the last section.
+  useEffect(() => {
+    if (!isLeaving) return;
+    const section = sectionRef.current;
+    if (!section || !section.contains(document.activeElement)) return;
 
-  const percent =
-    sectionProgress.total === 0 ? 0 : (sectionProgress.checked / sectionProgress.total) * 100;
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('main section'));
+    const index = sections.indexOf(section);
+    const neighbour = sections[index + 1] ?? sections[index - 1];
+    const target =
+      neighbour?.querySelector<HTMLButtonElement>('li button') ??
+      document.querySelector<HTMLButtonElement>('[data-empty-action]');
+    target?.focus();
+  }, [isLeaving]);
+
+  let percent = 0;
+  if (showComplete) percent = 100;
+  else if (sectionProgress.total > 0) {
+    percent = (sectionProgress.checked / sectionProgress.total) * 100;
+  }
 
   return (
     <>
-      <section
+      <m.section
+        ref={sectionRef}
         id={anchorId}
-        className={wrapperClass}
-        style={{ '--tint': CATEGORY_TINTS[iconId] } as React.CSSProperties}
+        className={styles.wrapper}
+        initial={collapse.initial}
+        animate={collapse.animate}
+        exit={collapse.exit}
       >
-        <div className={styles.stickyBar}>
-          <span className={styles.headerIcon}>
-            <CategoryIcon iconId={iconId} className={styles.headerIconSvg} />
-          </span>
-          <div className={styles.titleBlock}>
+        <div className={styles.inner}>
+          <div className={styles.stickyBar}>
+            <CategoryIcon iconId={iconId} className={styles.headerIcon} />
             <h2 className={styles.heading}>{displayTitle}</h2>
-            <div className={styles.meta}>
-              <div className={styles.miniTrack} aria-hidden='true'>
-                <div className={styles.miniFill} style={{ width: `${percent}%` }} />
-              </div>
-              {isComplete ? (
-                <span className={styles.completeBadge}>
-                  <CheckIcon className={styles.completeIcon} />
-                  {t('sectionComplete')}
-                </span>
-              ) : (
-                <span className={styles.sectionProgress}>
-                  {sectionProgress.checked}/{sectionProgress.total}
-                </span>
-              )}
+            {showComplete ? (
+              <span className={styles.completeBadge}>
+                <Check className={styles.completeIcon} weight='bold' aria-hidden='true' />
+                {t('sectionComplete')}
+              </span>
+            ) : (
+              <span className={styles.sectionProgress}>
+                {sectionProgress.checked}/{sectionProgress.total}
+              </span>
+            )}
+            <button
+              type='button'
+              className={styles.clearBtn}
+              onClick={() => setShowClearConfirm(true)}
+              disabled={sectionProgress.checked === 0 || isLeaving}
+              aria-label={t('clearSection')}
+              title={t('clearSection')}
+            >
+              <ArrowCounterClockwise className={styles.clearIcon} aria-hidden='true' />
+            </button>
+            <div className={styles.rule} aria-hidden='true'>
+              <div
+                className={styles.ruleFill}
+                style={{ transform: `translateX(${percent - 100}%)` }}
+              />
             </div>
           </div>
-          <button
-            type='button'
-            className={styles.clearBtn}
-            onClick={() => setShowClearConfirm(true)}
-            disabled={sectionProgress.checked === 0}
-            aria-label={t('clearSection')}
-            title={t('clearSection')}
-          >
-            <ResetIcon className={styles.clearIcon} />
-          </button>
+          <ul className={styles.checklist}>
+            <AnimatePresence initial={false}>
+              {data.data.map((item) => (
+                <m.li
+                  key={item.id}
+                  className={styles.item}
+                  initial={collapse.initial}
+                  animate={collapse.animate}
+                  exit={collapse.exit}
+                >
+                  <ChecklistItem
+                    id={item.id}
+                    text={item.text}
+                    isChecked={item.isChecked}
+                    isSectionLeaving={isLeaving}
+                    onToggle={onToggleItem}
+                  />
+                </m.li>
+              ))}
+            </AnimatePresence>
+          </ul>
         </div>
-        <ul className={styles.checklist}>
-          {data.data.map((item) => (
-            <li key={item.id}>
-              <ChecklistItem
-                id={item.id}
-                text={item.text}
-                isChecked={item.isChecked}
-                onToggle={onToggleItem}
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
+      </m.section>
 
-      {showClearConfirm && (
-        <ConfirmDialog
-          title={tInterpolate('clearSectionConfirm.title', { category: displayTitle })}
-          message={t('clearSectionConfirm.message')}
-          confirmLabel={t('clearSectionConfirm.confirm')}
-          onConfirm={() => {
-            onClearSection();
-            setShowClearConfirm(false);
-          }}
-          onCancel={() => setShowClearConfirm(false)}
-        />
-      )}
+      <AnimatePresence>
+        {showClearConfirm && (
+          <ConfirmDialog
+            key='clear-section-confirm'
+            title={tInterpolate('clearSectionConfirm.title', { category: displayTitle })}
+            message={t('clearSectionConfirm.message')}
+            confirmLabel={t('clearSectionConfirm.confirm')}
+            onConfirm={() => {
+              onClearSection();
+              setShowClearConfirm(false);
+            }}
+            onCancel={() => setShowClearConfirm(false)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 };

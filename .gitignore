@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# full-size source photos for scripts/generate-hero-images.mjs
+/.cache

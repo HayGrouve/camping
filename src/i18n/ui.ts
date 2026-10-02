@@ -3,6 +3,8 @@ import { Locale } from './locale';
 export type UiKey =
   | 'app.title'
   | 'hero.eyebrow'
+  | 'hero.photoAlt'
+  | 'hero.photoAltPacked'
   | 'packed'
   | 'filter.all'
   | 'filter.remaining'
@@ -25,12 +27,15 @@ export type UiKey =
   | 'jumpCategoriesAria'
   | 'sectionComplete'
   | 'emptyState.title'
-  | 'emptyState.message';
+  | 'emptyState.message'
+  | 'emptyState.action';
 
 const UI: Record<Locale, Record<UiKey, string>> = {
   bg: {
     'app.title': 'Списък за къмпинг на Цеко',
     'hero.eyebrow': 'Списък за багаж',
+    'hero.photoAlt': 'Оранжева палатка сред скали в планината по здрач',
+    'hero.photoAltPacked': 'Палатка над облаците в утринна светлина',
     'packed': 'опаковано',
     'filter.all': 'Всички',
     'filter.remaining': 'Оставащи',
@@ -55,10 +60,13 @@ const UI: Record<Locale, Record<UiKey, string>> = {
     'sectionComplete': 'Готово',
     'emptyState.title': 'Всичко е в раницата',
     'emptyState.message': 'Няма оставащи артикули. Покажи всички, за да прегледаш списъка отново.',
+    'emptyState.action': 'Покажи всички',
   },
   en: {
     'app.title': "Ceko's Camping Checklist",
     'hero.eyebrow': 'Packing list',
+    'hero.photoAlt': 'An orange tent among rocks in the mountains at dusk',
+    'hero.photoAltPacked': 'A tent above the clouds in morning light',
     'packed': 'packed',
     'filter.all': 'All',
     'filter.remaining': 'Remaining',
@@ -83,6 +91,7 @@ const UI: Record<Locale, Record<UiKey, string>> = {
     'sectionComplete': 'Done',
     'emptyState.title': 'Everything is in the backpack',
     'emptyState.message': 'No items left to pack. Switch to “All” to review the full list.',
+    'emptyState.action': 'Show all',
   },
 };
 
